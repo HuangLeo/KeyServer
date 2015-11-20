@@ -40,6 +40,12 @@ char recvbuf[BUFFER_SIZE];
 
 char mac[32];
 
+char ver[20];
+int lenn;
+int k;
+int If_cp=1;
+void get_p_pp_ppp_version();
+
 void *thread1()
 {
         printf ("thread1 : I'm thread 1\n");
@@ -480,35 +486,49 @@ void *thread3()
 	       	//打开文件,读取版本信息
 	       	if((fp=fopen("version","a+"))==NULL)
 	       	{
-	               	printf("-----cannot open this file on the out------\n");
+	               	printf("-----cannot open this file on the version------\n");
 	               	//exit(0);
 	       	}else{
-	               	printf("--------open this file on the out-------\n");
+	               	printf("--------open this file on the version-------\n");
 	       	}
 		//
-	        char kc[4][1000] ;
-	        int k=0;
-		char ver[9];
-	        if(fgets(kc[k],9,fp)!=NULL)
-	        {
-		        printf("read dada file---%s\n",kc[k]);
+	        char kc[1][1000] ;
+		int a,b;
+	        k=0;
+	        if(fgets(kc[k],20,fp)!=NULL){
+		        printf("read version file---%s\n",kc[k]);
+			a=strlen(kc[k]);
+			printf("lenlenlen=%d\n",a);
 	        	strcpy(ver,kc[k]);
 	        	printf("-----------ver=%s\n",ver);
+			b=strlen(ver);
+			printf("len22222lenlen=%d\n",b);
 	        }
+		ver[b-1]='\0';
+		printf("------bbbbb-----ver=%s\n",ver);
 	        fclose(fp);
 		int lenn;
 		lenn=strlen(ver);
 		printf("oooooooolen=%d",lenn);
-		if(lenn!=8)
+		if(lenn<16 && lenn>6 && strpbrk(ver,"\n")==0 && If_cp==1){
+			printf("you need copy version to preversion\n");
+			char v_p[254];
+			sprintf(v_p,"echo %s > preversion && echo %s > ppversion && echo %s > pppversion",ver,ver,ver);
+			system(v_p);
+			If_cp--;
+		}
+		if(lenn>15 || lenn<7)
 		{
 			printf("!!!!!!!!!!!ver is empty\n");
-			strcpy(ver,"20121028");
-			printf("!!!!!!!!!!!ver=%s\n",ver);
+			//strcpy(ver,"1.0.0.0");
+			//printf("!!!!!!!!!!!ver=%s\n",ver);
+			get_p_pp_ppp_version();
 		}
-		if(lenn==8 && strpbrk(ver,"\n")!=0){
+		if(lenn<16 && lenn>6 && strpbrk(ver,"\n")!=0){
                         printf("************error******!!!!!!!!!!!!\n");
-                        strcpy(ver,"20121028");
-                        printf("!!!!!!!!!!!ver=%s\n",ver);
+                        //strcpy(ver,"20121028");
+                        //printf("!!!!!!!!!!!ver=%s\n",ver);
+			get_p_pp_ppp_version();
                 }
 
 		//定义数组存放用户的帐号
@@ -544,7 +564,7 @@ void *thread3()
 		printf("nnnnnnnnnnnnnnn=%s\n",nn);
 		if(strncmp(nn,"http://",7)==0){
 			printf("You need to update\n");
-			int j=15;
+			/*int j=15;
 			int ii=0;
 			char version[9];
 			char ss[10];
@@ -565,17 +585,18 @@ void *thread3()
 	
 			char tmp3[254];
 			sprintf(tmp3,"echo %s > version",version);
-			system(tmp3);
+			system(tmp3);*/
 
 			char tmp6[254];
 			sprintf(tmp6,"cd ./new && wget %s",link_name);
 			system(tmp6);
+			If_cp++;
 			char tmp5[54];
 			sprintf(tmp5,"cd ./new/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
 			system(tmp5);
-			char tmp7[54];
+			/*char tmp7[54];
 			sprintf(tmp7,"cd ./new/ && rm ./*.tar.gz && rm -rf ./patch");
-			system(tmp7);
+			system(tmp7);*/
 			
 		}else{
 			printf("***************error******************\n");
@@ -722,6 +743,123 @@ void get_mac_addr()
 	(unsigned char) ifr.ifr_hwaddr.sa_data[5]);
 	printf("Mac:%s\n",mac);
 }
+
+void get_p_pp_ppp_version()
+{
+	memset(ver,0,sizeof(ver));//clean ver
+	//打开preversion文件,读取版本信息
+       	if((fp=fopen("preversion","a+"))==NULL)
+       	{
+	       	printf("-----cannot open this file on the preversion------\n");
+	       	//exit(0);
+       	}else{
+	       	printf("--------open this file on the preversion-------\n");
+       	}
+	//
+	char pre[1][1000] ;
+	int c,d;
+	k=0;
+	if(fgets(pre[k],20,fp)!=NULL)
+	{
+		printf("read preversion file---%s\n",pre[k]);
+		c=strlen(pre[k]);
+                printf("lenprelenlen=%d\n",c);
+		strcpy(ver,pre[k]);
+		printf("-------pre----ver=%s\n",ver);
+		d=strlen(ver);
+                printf("len222pre22lenlen=%d\n",d);
+	}
+	ver[d-1]='\0';
+	printf("------dddpreddd-----ver=%s\n",ver);
+	fclose(fp);
+	lenn=strlen(ver);
+	printf("ooopreooooolen=%d\n",lenn);
+	if(lenn<16 && lenn>6 && strpbrk(ver,"\n")==0){
+		printf("you need copy preversion to version\n");
+		char pre_v[254];
+		sprintf(pre_v,"echo %s > version",ver);
+		system(pre_v);
+	}
+	if(lenn>15 || lenn<7){
+		memset(ver,0,sizeof(ver));//clean ver
+		printf("!!!!!error!!!!!!pre is error\n");
+		//打开ppversion文件,读取版本信息
+	       	if((fp=fopen("ppversion","a+"))==NULL)
+	       	{
+		       	printf("-----cannot open this file on the ppversion------\n");
+		       	//exit(0);
+	       	}else{
+		       	printf("--------open this file on the ppversion-------\n");
+	       	}
+		//
+		char pp[1][1000] ;
+		int e,f;
+		k=0;
+		if(fgets(pp[k],20,fp)!=NULL)
+		{
+			printf("read ppversion file---%s\n",pp[k]);
+			e=strlen(pp[k]);
+		        printf("lenpplenlen=%d\n",e);
+			strcpy(ver,pp[k]);
+			printf("-------pp----ver=%s\n",ver);
+			f=strlen(ver);
+		        printf("len222pp22lenlen=%d\n",f);
+		}
+		ver[f-1]='\0';
+		printf("------dddppddd-----ver=%s\n",ver);
+		fclose(fp);
+		lenn=strlen(ver);
+		printf("oooppooooolen=%d\n",lenn);
+		if(lenn<16 && lenn>6 && strpbrk(ver,"\n")==0){
+			printf("you need copy ppversion to version\n");
+			char pp_v[254];
+			sprintf(pp_v,"echo %s > version && echo %s > preversion",ver,ver);
+			system(pp_v);
+		}
+		if(lenn>15 || lenn<7){
+			memset(ver,0,sizeof(ver));//clean ver
+			printf("!!!!!error!!!!!!pp is error\n");
+			//打开pppversion文件,读取版本信息
+		       	if((fp=fopen("pppversion","a+"))==NULL)
+		       	{
+			       	printf("-----cannot open this file on the pppversion------\n");
+			       	//exit(0);
+		       	}else{
+			       	printf("--------open this file on the pppversion-------\n");
+		       	}
+			//
+			char ppp[1][1000] ;
+			int g,h;
+			k=0;
+			if(fgets(ppp[k],20,fp)!=NULL)
+			{
+				printf("read pppversion file---%s\n",ppp[k]);
+				g=strlen(ppp[k]);
+				printf("lenppplenlen=%d\n",g);
+				strcpy(ver,ppp[k]);
+				printf("-------ppp----ver=%s\n",ver);
+				h=strlen(ver);
+				printf("len222ppp22lenlen=%d\n",h);
+			}
+			ver[h-1]='\0';
+			printf("------dddpppddd-----ver=%s\n",ver);
+			fclose(fp);
+			lenn=strlen(ver);
+			printf("ooopppooooolen=%d\n",lenn);
+			if(lenn<16 && lenn>6 && strpbrk(ver,"\n")==0){
+				printf("you need copy pppversion to version\n");
+				char ppp_v[254];
+				sprintf(ppp_v,"echo %s > version && echo %s > preversion && echo %s > ppversion",ver,ver,ver);
+				system(ppp_v);
+			}
+			if(lenn>15 || lenn<7){
+				printf("!!!!!error!!!!!!ppp is error\n");
+				exit(0);
+			}
+		}		
+	}
+}
+
 
 int main()
 {
