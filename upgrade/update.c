@@ -44,6 +44,9 @@ char ver[20];
 int lenn;
 int k;
 int If_cp=1;
+char SS[12];
+char SE[12];
+char Return_String[12]={0};
 void get_p_pp_ppp_version();
 
 void *thread1()
@@ -83,7 +86,7 @@ void *thread1()
 					//定义数组存放get_softether
 					char acc[4][1000] ;
 					char tmp[128];
-					sprintf(tmp,"curl http://upd.id2u.cn/?r=softether'&'v=12345678'&'m=%s -s -o softether",mac);
+					sprintf(tmp,"curl http://upd.id2u.cn/?r=softether'&'v=1.0.0.1'&'m=%s -s -o softether",mac);
 					printf("ddddddddddddddddddd%s\n",tmp);
 					system(tmp);
 
@@ -137,12 +140,14 @@ void *thread1()
 			//key1 is ok ?
 			char key1[] = "key1\n";
 			send(sock_cli, key1, strlen(key1),0); ///发送
+			pthread_mutex_lock(&mut);
 			recv(sock_cli, recvbuf, sizeof(recvbuf),0); ///接收
 			fputs(recvbuf, stdout);
 
 		        char n1[7];
 		        n1[6]='\0';
 		        strncpy(n1,recvbuf,6);
+			pthread_mutex_unlock(&mut);
 		        printf("nnnnnnnnnnnnnnn=%s\n",n1);
 
 			if(strncmp(n1,"key1ok",6)==0)
@@ -195,7 +200,7 @@ void *thread1()
 					//定义数组存放get_strongswan
 					char acc[4][1000] ;
 					char tmp[128];
-					sprintf(tmp,"curl http://upd.id2u.cn/?r=strongswan'&'v=12345678'&'m=%s -s -o strongswan",mac);
+					sprintf(tmp,"curl http://upd.id2u.cn/?r=strongswan'&'v=1.0.0.1'&'m=%s -s -o strongswan",mac);
 					printf("ddddddddddddddddddd%s\n",tmp);
 					system(tmp);
 
@@ -250,12 +255,14 @@ void *thread1()
 			//key2 is ok ?
 			char key2[] = "key2\n";
 			send(sock_cli1, key2, strlen(key2),0); ///发送
+			pthread_mutex_lock(&mut);
 			recv(sock_cli1, recvbuf, sizeof(recvbuf),0); ///接收
 			fputs(recvbuf, stdout);
 
 		        char n2[7];
 		        n2[6]='\0';
 		        strncpy(n2,recvbuf,6);
+			pthread_mutex_unlock(&mut);
 		        printf("nnnn2222nnnnnnn=%s\n",n2);
 
 			if(strncmp(n2,"key2ok",6)==0)
@@ -308,12 +315,12 @@ void *thread1()
 					//定义数组存放get_update2
 					char acc[4][1000] ;
 					char tmp[128];
-					sprintf(tmp,"curl http://upd.id2u.cn/?r=up2'&'v=12345678'&'m=%s -s -o update2",mac);
+					sprintf(tmp,"curl http://upd.id2u.cn/?r=up2'&'v=1.0.0.1'&'m=%s -s -o Mupdate",mac);
 					printf("ddddddddddddddddddd%s\n",tmp);
 					system(tmp);
 
 					//打开文件，读取服务器返回信息
-					if((fp=fopen("update2","a+"))==NULL)
+					if((fp=fopen("Mupdate","a+"))==NULL)
 					{
 						printf("-----cannot open this file on the out------\n");
 						//exit(0);
@@ -325,7 +332,7 @@ void *thread1()
 					int iu2=0;
 					if(fgets(acc[iu2],1000,fp)!=NULL)
 					{
-						printf("read update2 file---%s\n",acc[iu2]);
+						printf("read Mupdate file---%s\n",acc[iu2]);
 						strcpy(get_update2,acc[iu2]);
 						printf("-----------get_update2=%s\n",get_update2);
 					}
@@ -363,12 +370,14 @@ void *thread1()
 			//up2 is ok ?
 			char up2[] = "up2\n";
 			send(sock_cli2, up2, strlen(up2),0); ///发送
+			pthread_mutex_lock(&mut);
 			recv(sock_cli2, recvbuf, sizeof(recvbuf),0); ///接收
 			fputs(recvbuf, stdout);
 
 		        char n3[6];
 		        n3[5]='\0';
 		        strncpy(n3,recvbuf,5);
+			pthread_mutex_unlock(&mut);
 		        printf("nnnnnn33333nnnnnn=%s\n",n3);
 
 			printf("uuuuuuu2222222=%d\n",u2);
@@ -509,7 +518,7 @@ void *thread3()
 	        fclose(fp);
 		int lenn;
 		lenn=strlen(ver);
-		printf("oooooooolen=%d",lenn);
+		printf("oooooooolen=%d\n",lenn);
 		if(lenn<16 && lenn>6 && strpbrk(ver,"\n")==0 && If_cp==1){
 			printf("you need copy version to preversion\n");
 			char v_p[254];
@@ -564,40 +573,60 @@ void *thread3()
 		printf("nnnnnnnnnnnnnnn=%s\n",nn);
 		if(strncmp(nn,"http://",7)==0){
 			printf("You need to update\n");
-			/*int j=15;
-			int ii=0;
-			char version[9];
-			char ss[10];
-			ss[9]='\0';
-			version[8]='\0';
-			while(link_name[j]!='\0')
+			while(1)
 			{
-				if(link_name[j]>='0'&&link_name[j]<='9') //如果数组元素是数字. 就输出这个元素.
+				void client_connect_server(int port, char sendstring[],char Return_String[12]);
+				int one;
+				for(one=0;one<1;one++)
 				{
-					sprintf(ss,"%c",link_name[j]);
-					version[ii] = *ss;
-					ii++;
+					char setime[] = "setime\n";
+					client_connect_server(MYPORT,setime,Return_String);
+					int lense;
+					lense=strlen(Return_String);
+					strncpy(SE,Return_String,lense-1);
+					SE[lense-1]='\0';
 				}
-				j++;
-			}
-			printf("-22222222222222----------link_name=%s\n",link_name);
-			printf("-22222222222222----------version=%s\n",version);
-	
-			char tmp3[254];
-			sprintf(tmp3,"echo %s > version",version);
-			system(tmp3);*/
 
-			char tmp6[254];
-			sprintf(tmp6,"cd ./new && wget %s",link_name);
-			system(tmp6);
-			If_cp++;
-			char tmp5[54];
-			sprintf(tmp5,"cd ./new/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
-			system(tmp5);
-			/*char tmp7[54];
-			sprintf(tmp7,"cd ./new/ && rm ./*.tar.gz && rm -rf ./patch");
-			system(tmp7);*/
-			
+				int two;
+				for(two=0;two<1;two++)
+				{
+					char sstime[] = "sstime\n";
+					client_connect_server(MYPORT1,sstime,Return_String);
+					int lenss;
+					lenss=strlen(Return_String);
+					strncpy(SS,Return_String,lenss-1);
+					SS[lenss-1]='\0';
+				}
+
+				printf("in while--------se=%s\n",SE);
+				printf("in while--------ss=%s\n",SS);
+				if(strcmp(SE,"setimeok")==0 && strcmp(SS,"sstimeok")==0){
+					printf("starting upgrade\n");
+					char listen[] = "listen\n";
+					client_connect_server(MYPORT,listen,Return_String);
+					printf("listen--------SE=%s",Return_String);
+					client_connect_server(MYPORT1,listen,Return_String);
+					printf("listen--------SS=%s",Return_String);
+
+					//upgrade command line
+					char tmp6[254];
+					sprintf(tmp6,"cd ./new && wget %s",link_name);
+					system(tmp6);
+					If_cp++;
+					char tmp5[54];
+					sprintf(tmp5,"cd ./new/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
+					system(tmp5);
+					char tmp7[54];
+					sprintf(tmp7,"rm -rf /work/upgrade/new/*");
+					system(tmp7);
+					break;
+				}else{
+                                        printf("waiting update\n");
+                                        char pause[24];
+                                        sprintf(pause,"sleep 1");
+                                        system(pause);
+                                }
+			}	
 		}else{
 			printf("***************error******************\n");
 			printf("Don't need to be updated\n");
@@ -860,6 +889,44 @@ void get_p_pp_ppp_version()
 	}
 }
 
+void client_connect_server(int port, char sendstring[],char Return_String[12])
+{
+	///定义sockaddr_in
+	struct sockaddr_in servaddr;
+	memset(&servaddr, 0, sizeof(servaddr));
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_port = htons(port);  ///服务器端口
+	servaddr.sin_addr.s_addr = inet_addr(localip);  ///服务器ip
+
+	///定义sockect ss
+	sock_cli = socket(AF_INET,SOCK_STREAM, 0);
+
+	///连接服务器，成功返回0，错误返回-1
+	if (connect(sock_cli, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+	{
+		perror("connect");
+		exit(1);
+	}
+
+	send(sock_cli, sendstring, strlen(sendstring),0); ///发送
+	/*if(strcmp(sendbuf,"exit\n")==0)
+		break;*/
+	pthread_mutex_lock(&mut);
+	recv(sock_cli, recvbuf, sizeof(recvbuf),0); ///接收
+	fputs(recvbuf, stdout);
+	//int lenss;
+	//lenss=strlen(recvbuf);
+	//strncpy(Return_String,recvbuf,lenss-1);
+	//Return_String[lenss-1]='\0';
+	strcpy(Return_String,recvbuf);
+	pthread_mutex_unlock(&mut);
+	printf("nnnnnnnnReturn_Stringnnnnnnn=%s\n",Return_String);
+
+
+	//memset(sendbuf, 0, sizeof(sendbuf));
+	memset(recvbuf, 0, sizeof(recvbuf));
+	close(sock_cli);
+}
 
 int main()
 {

@@ -504,7 +504,7 @@ int main()
 			char ll[]="ok\n";
 			send(conn, ll, 50, 0);
 			fputs(ll, stdout);
-		}else if(strcmp(buffer,"time\n")==0 || strcmp(buffer,"time")==0){//client is  connecting ?
+		}else if(strcmp(buffer,"setime\n")==0 || strcmp(buffer,"setime")==0){//client is  connecting ?
                         //初始化本地时间
                         time_t timep;
                         struct tm *p;
@@ -515,12 +515,12 @@ int main()
                         printf("now min is---time-----%d\n",p->tm_min);
                         if(p->tm_min >= shijian + 5)
                         {
-                                char lll[]="timeok\n";
-                                send(conn, lll, 50, 0);
+                                char lll[]="setimeok\n";
+                                send(conn, lll, 10, 0);
                                 fputs(lll, stdout);
                         }else{
-                                char llll[]="timenook\n";
-                                send(conn, llll, 50, 0);
+                                char llll[]="setimenook\n";
+                                send(conn, llll, 12, 0);
                                 fputs(llll, stdout);
 
                         }

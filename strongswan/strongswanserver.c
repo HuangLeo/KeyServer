@@ -225,10 +225,18 @@ int main()
                         fputs(l, stdout);
 
 		}else if(strcmp(buffer,"listen\n")==0 || strcmp(buffer,"listen")==0){
+                        //定义时间并初始化，判断是否有用户连接
+                        time_t timep;
+                        struct tm *p;
+                        time(&timep);
+                        p =localtime(&timep);
+                        shijian  = p->tm_min;
+                        printf("now min is---listen-----%d\n",p->tm_min);
+
 			char ll[]="ok\n";
 			send(conn, ll, 50, 0);
 			fputs(ll, stdout);
-		}else if(strcmp(buffer,"timess\n")==0 || strcmp(buffer,"timess")==0){
+		}else if(strcmp(buffer,"sstime\n")==0 || strcmp(buffer,"sstime")==0){
                         //初始化本地时间
                         time_t timep;
                         struct tm *p;
@@ -237,14 +245,14 @@ int main()
 
                         //shijian  = p->tm_hour;
                         printf("now min is---time-----%d\n",p->tm_min);
-                        if(p->tm_min >= shijian + 1)
+                        if(p->tm_min >= shijian + 5)
                         {
-                                char lll[]="timessok\n";
-                                send(conn, lll, 50, 0);
+                                char lll[]="sstimeok\n";
+                                send(conn, lll, 10, 0);
                                 fputs(lll, stdout);
                         }else{
-                                char llll[]="timessnook\n";
-                                send(conn, llll, 50, 0);
+                                char llll[]="sstimenook\n";
+                                send(conn, llll, 12, 0);
                                 fputs(llll, stdout);
 
                         }
