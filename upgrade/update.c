@@ -489,6 +489,9 @@ void *thread3()
 {
         printf("thread3 : I'm thread 3\n");
 	char link_name[254];
+	char clear_new[54];
+	sprintf(clear_new,"rm -rf /work/upgrade/new/*");
+	system(clear_new);
 	while(1)
 	{
 
@@ -573,6 +576,9 @@ void *thread3()
 		printf("nnnnnnnnnnnnnnn=%s\n",nn);
 		if(strncmp(nn,"http://",7)==0){
 			printf("You need to update\n");
+			char tmp6[254];
+			sprintf(tmp6,"cd ./new && wget %s",link_name);
+			system(tmp6);
 			while(1)
 			{
 				void client_connect_server(int port, char sendstring[],char Return_String[12]);
@@ -609,9 +615,6 @@ void *thread3()
 					printf("listen--------SS=%s",Return_String);
 
 					//upgrade command line
-					char tmp6[254];
-					sprintf(tmp6,"cd ./new && wget %s",link_name);
-					system(tmp6);
 					If_cp++;
 					char tmp5[54];
 					sprintf(tmp5,"cd ./new/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
@@ -621,22 +624,26 @@ void *thread3()
 					system(tmp7);
 					break;
 				}else{
-                                        printf("waiting update\n");
+                                        printf("waiting update,sleep 5s\n");
+					char breathe[254];
+					sprintf(breathe,"curl http://upd.id2u.cn/?r=update'&'v=%s'&'m=%s",ver,mac);
+					system(breathe);
                                         char pause[24];
-                                        sprintf(pause,"sleep 1");
+                                        sprintf(pause,"sleep 5");
                                         system(pause);
                                 }
 			}	
 		}else{
 			printf("***************error******************\n");
-			printf("Don't need to be updated\n");
+			printf("Don't need to be updated,sleep 60s\n");
 			char tmp4[24];
                 	sprintf(tmp4,"sleep 60");
                 	system(tmp4);
 		}
 
 		char tmp2[24];
-		sprintf(tmp2,"sleep 60");
+		printf("this is while out,sleep 2s\n");
+		sprintf(tmp2,"sleep 2");
 		system(tmp2);
 	}
         printf("thread3 :主函数在等我完成任务吗？\n");
