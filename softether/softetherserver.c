@@ -121,6 +121,7 @@ int main()
 	
 	//定义时间并初始化，用作前一天的用户清理
 	int shijian;
+	long int record_time;
 
 	time_t timep;
 	struct tm *p;
@@ -497,10 +498,11 @@ int main()
                         time_t timep;
                         struct tm *p;
                         time(&timep);
-                        p =localtime(&timep);
-                        shijian  = p->tm_min;
-                        printf("now min is---listen-----%d\n",p->tm_min);
-
+                        //p =localtime(&timep);
+                        //shijian  = p->tm_min;
+                        //printf("now min is---listen-----%d\n",p->tm_min);
+			record_time = timep;
+                        printf("now record_time is---listen-----%ld\n",record_time);
 			char ll[]="ok\n";
 			send(conn, ll, 50, 0);
 			fputs(ll, stdout);
@@ -509,11 +511,11 @@ int main()
                         time_t timep;
                         struct tm *p;
                         time(&timep);
-                        p =localtime(&timep);
-
+                        //p =localtime(&timep);
+			
                         //shijian  = p->tm_hour;
-                        printf("now min is---time-----%d\n",p->tm_min);
-                        if(p->tm_min >= shijian + 5)
+                        printf("now timep is---time-----%ld\n",timep);
+                        if(timep >= record_time + 300)
                         {
                                 char lll[]="setimeok\n";
                                 send(conn, lll, 10, 0);

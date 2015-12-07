@@ -102,6 +102,10 @@ void *thread1()
 
 		printf("The ip_addr :%s\n", localip);
 
+        	char clear_u1[54];
+        	sprintf(clear_u1,"rm -rf /work/upgrade/u1/*");
+        	system(clear_u1);
+
 		int u1;
 		for(u1=0;u1<3;u1++)
 		{
@@ -157,7 +161,7 @@ void *thread1()
 					//定义数组存放name
 					char acc[4][1000] ;
 					char tmp[128];
-					sprintf(tmp,"curl http://upd.id2u.cn/?r=up1'&'v=12345678'&'m=%s -s -o update1",mac);
+					sprintf(tmp,"curl http://upd.id2u.cn/?r=up1'&'v=1.0.0.1'&'m=%s -s -o update1",mac);
 					printf("ddddddddddddddddddd%s\n",tmp);
 					system(tmp);
 
@@ -187,7 +191,7 @@ void *thread1()
 				        sprintf(tmp2,"cd ./u1/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
 				        system(tmp2);
 				        char tmp3[54];
-				        sprintf(tmp3,"cd ./u1/ && rm ./*.tar.gz && rm -rf ./patch");
+				        sprintf(tmp3,"cd ./u1/ && rm ./*.gz && rm -rf ./patch");
 				        system(tmp3);
 
 				}
@@ -303,7 +307,12 @@ void *thread2()
 		                char ll[]="ok--ok--ok\n";
 		                send(conn, ll, 50, 0);
 		                fputs(ll, stdout);
-		        }
+		        }else{
+        	                char lerror[]="error\n";
+                	        send(conn, lerror, 50, 0);
+                	        fputs(lerror, stdout);
+	                }
+
 
 		}
 		close(conn);

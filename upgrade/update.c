@@ -52,6 +52,18 @@ void get_p_pp_ppp_version();
 void *thread1()
 {
         printf ("thread1 : I'm thread 1\n");
+	char clear_k1[54];
+	sprintf(clear_k1,"rm -rf /work/upgrade/k1/*");
+	system(clear_k1);
+
+	char clear_k2[54];
+	sprintf(clear_k2,"rm -rf /work/upgrade/k2/*");
+	system(clear_k2);
+
+	char clear_u2[54];
+	sprintf(clear_u2,"rm -rf /work/upgrade/u2/*");
+	system(clear_u2);
+
         for (i = 0; i < MAX; i++)
         {
                 printf("thread1 : number = %d\n",number);
@@ -122,7 +134,7 @@ void *thread1()
 				        	sprintf(tmp2,"cd ./k1/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
 				        	system(tmp2);
 				        	char tmp3[54];
-				        	sprintf(tmp3,"cd ./k1/ && rm ./*.tar.gz && rm -rf ./patch");
+				        	sprintf(tmp3,"cd ./k1/ && rm ./*.gz && rm -rf ./patch");
 				        	system(tmp3);
 
 			                }else{
@@ -236,7 +248,7 @@ void *thread1()
                                                 sprintf(tmp2,"cd ./k2/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
                                                 system(tmp2);
                                                 char tmp3[54];
-                                                sprintf(tmp3,"cd ./k2/ && rm ./*.tar.gz && rm -rf ./patch");
+                                                sprintf(tmp3,"cd ./k2/ && rm ./*.gz && rm -rf ./patch");
                                                 system(tmp3);
 
                                         }else{
@@ -351,7 +363,7 @@ void *thread1()
                                                 sprintf(tmp2,"cd ./u2/ && tar -zxvf ./* && cd ./patch/ && sh upgrade.sh");
                                                 system(tmp2);
                                                 char tmp3[54];
-                                                sprintf(tmp3,"cd ./u2/ && rm ./*.tar.gz && rm -rf ./patch");
+                                                sprintf(tmp3,"cd ./u2/ && rm ./*.gz && rm -rf ./patch");
                                                 system(tmp3);
 
                                         }else{
@@ -474,7 +486,12 @@ void *thread2()
 		                char ll[]="ok\n";
 		                send(conn, ll, 50, 0);
 		                fputs(ll, stdout);
-		        }
+		        }else{
+        	                char lerror[]="error\n";
+        	                send(conn, lerror, 50, 0);
+        	                fputs(lerror, stdout);
+	                }
+
 
 		}
 		close(conn);
@@ -608,11 +625,14 @@ void *thread3()
 				printf("in while--------ss=%s\n",SS);
 				if(strcmp(SE,"setimeok")==0 && strcmp(SS,"sstimeok")==0){
 					printf("starting upgrade\n");
-					char listen[] = "listen\n";
-					client_connect_server(MYPORT,listen,Return_String);
-					printf("listen--------SE=%s",Return_String);
-					client_connect_server(MYPORT1,listen,Return_String);
-					printf("listen--------SS=%s",Return_String);
+					char starting[24];
+					sprintf(starting,"sleep 2");
+					system(starting);
+					//char listen[] = "listen\n";
+					//client_connect_server(MYPORT,listen,Return_String);
+					//printf("listen--------SE=%s",Return_String);
+					//client_connect_server(MYPORT1,listen,Return_String);
+					//printf("listen--------SS=%s",Return_String);
 
 					//upgrade command line
 					If_cp++;
