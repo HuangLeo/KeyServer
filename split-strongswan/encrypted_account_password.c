@@ -1,17 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-int account_number=0;
 char s[100000];//存放用户名、密码、预共享密钥
 //发送一个密文
-void encrypt_account_and_password(char acc[100000][30],char miwen[64])
+void encrypt_account_and_password(char acc[100000][32],char miwen[64],int account_number)
 {
 	sprintf(s,"%s",acc[account_number]);
-	account_number++;//逐渐提取用户密码预共享密钥
-	if(account_number == 10)
-	{
-		account_number=0;
-	}
 	//把字符串拆分成每个都是8位的字符串
 	int jjj;
 	jjj = strlen(s);
@@ -22,15 +16,15 @@ void encrypt_account_and_password(char acc[100000][30],char miwen[64])
 		char s1[9];
 		char s2[9];
 		char s3[9];
-		char s4[9];
-		char sn[3];
+		char s4[8];
+		char sn[8];
 		char ss[9];
 	
 		s1[8]='\0';
 		s2[8]='\0';
 		s3[8]='\0';
-		s4[8]='\0';
-		sn[2]='\0';
+		s4[7]='\0';
+		sn[7]='\0';
 		ss[8]='\0';
 		int i;
 		for(i=0;i<8;i++)//one
@@ -86,7 +80,7 @@ void encrypt_account_and_password(char acc[100000][30],char miwen[64])
 		printf("\n");
 
 
-	for(i=0;i<2;i++)
+	for(i=0;i<7;i++)
 	{
 		sprintf(ss,"%c",s4[i]);
 		sn[i] = *ss;

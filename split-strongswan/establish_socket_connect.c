@@ -17,8 +17,8 @@
 FILE * fp;
 //定义数组存放用户的帐号
 char miwen[64];
-char acc[100000][30];
-int account_number;
+char acc[100000][32];
+int account_number=0;
 void establish_socket_connect()
 {
 	///定义sockfd
@@ -116,9 +116,15 @@ void establish_socket_connect()
 			if(shijian == p->tm_hour)
 			{
 				printf("time is same\n");
-				encrypt_account_and_password(acc,miwen);
+				encrypt_account_and_password(acc,miwen,account_number);
 				send(conn, miwen, 64, 0);//通过sochet向客户端发送密文
 				//fputs(buf, stdout);
+
+        			account_number++;//逐渐提取用户密码预共享密钥
+        			if(account_number == 10)
+        			{
+        			        account_number=0;
+        			}
 
 			}else{
 				printf("time is diffrent\n");
@@ -128,7 +134,7 @@ void establish_socket_connect()
 				add_account_and_password(acc);
 
 				account_number=0;
-				encrypt_account_and_password(acc,miwen);
+				encrypt_account_and_password(acc,miwen,account_number);
 				send(conn, miwen, 64, 0);//通过sochet向客户端发送密文
 				//fputs(buf, stdout);
 

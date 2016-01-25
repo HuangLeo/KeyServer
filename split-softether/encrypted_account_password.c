@@ -8,14 +8,14 @@ void encrypted_account_password(char s[254],char miwen[64])
 				char s2[9];
 				char s3[9];
 				char s4[9];
-				char sn[3];
+				char sn[8];
 				char ss[9];
 				
 				s1[8]='\0';
 				s2[8]='\0';
 				s3[8]='\0';
 				s4[8]='\0';
-				sn[2]='\0';
+				sn[7]='\0';
 				ss[8]='\0';
 				int i=0;
 				for(i=0;i<8;i++)//one
@@ -71,7 +71,7 @@ void encrypted_account_password(char s[254],char miwen[64])
 				printf("\n");
 
 
-			for(i=0;i<2;i++)
+			for(i=0;i<7;i++)
 			{
 				sprintf(ss,"%c",s4[i]);
 				sn[i] = *ss;

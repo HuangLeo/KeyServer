@@ -42,7 +42,7 @@ void add_account_and_password(char ip[254],char s[254],char account[9])
 	sprintf(tmp2,"vpncmd /SERVER %s /adminhub:DEFAULT /PASSWORD:server /CMD UserPasswordSet %s /PASSWORD:%s",ip,account,pwd);
 	system(tmp2);
 	char buf[254];
-	char prsec[10] = {"cl123456"};
+	char prsec[15] = {"cl123456,4490"};
 	sprintf(buf,"%s,%s",account,pwd);
 	sprintf(s,"%s,%s",buf,prsec);
 

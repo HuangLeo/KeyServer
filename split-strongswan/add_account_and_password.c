@@ -5,7 +5,7 @@
 FILE * fp;
 
 //添加用户名、密码、预共享密钥
-void add_account_and_password(char acc[100000][30])
+void add_account_and_password(char acc[100000][32])
 {
 	char pool[]=
 	{
@@ -54,7 +54,7 @@ void add_account_and_password(char acc[100000][30])
 
 	        char buf[254];
 		char s[100000];
-	        char prsec[10] = {"cl123456"};
+	        char prsec[15] = {"cl123456,4500"};
 	        sprintf(buf,"%s,%s",account,pwd);
 		sprintf(s,"%s,%s",buf,prsec);
 		strcpy(acc[sum0] , s);
