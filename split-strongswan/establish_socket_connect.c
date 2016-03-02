@@ -19,7 +19,7 @@ FILE * fp;
 char miwen[64];
 char acc[100000][32];
 int account_number=0;
-void establish_socket_connect()
+void establish_socket_connect(char AllString[204800])
 {
 	///定义sockfd
 	int server_sockfd = socket(AF_INET,SOCK_STREAM, 0);
@@ -181,7 +181,13 @@ void establish_socket_connect()
 
                         }
 
-                }else{
+                }else if(strcmp(buffer,"cacert\n")==0 || strcmp(buffer,"cacert")==0){//send cert
+                        
+			printf("AllString is complete\n");
+                        send(conn, AllString, 20480, 0);
+                        printf("%s\n",AllString);
+			//fputs(acc1, stdout);
+		}else{
                         char lerror[]="error\n";
                         send(conn, lerror, 50, 0);
                         fputs(lerror, stdout);

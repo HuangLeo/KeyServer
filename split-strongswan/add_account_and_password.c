@@ -48,6 +48,14 @@ void add_account_and_password(char acc[100000][32])
 		sprintf(tmp3,"echo %s >> ipsec.secrets",tmp2);
 		system(tmp3);
 
+		char tmp22[254];
+		sprintf(tmp22,"%s \%%any : EAP \\\"%s\\\"",account,pwd);
+		printf("----------%s\n",tmp22);
+
+		char tmp33[254];
+		sprintf(tmp33,"echo %s >> ipsec.secrets",tmp22);
+		system(tmp33);
+
 		char tmp4[254];
 		sprintf(tmp4,"cp ipsec.secrets /etc");
 		system(tmp4);
